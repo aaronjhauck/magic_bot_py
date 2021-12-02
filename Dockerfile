@@ -7,7 +7,7 @@ RUN apk update && apk add python3-dev \
 
 WORKDIR /usr/src/app
 RUN python3 -m pip install \
-    schedule==1.1.0 \
+    pycron==3.0.0 \
     python-dotenv==0.17.0 \
     twython==3.9.1 \
     pymongo==3.4.0

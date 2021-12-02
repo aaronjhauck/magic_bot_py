@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class DataCollection:
-    # Private Methods
     def __init__(self):
         self.client = MongoClient(os.getenv("mongo_server"))
         self.db = self.client[os.getenv("mongo_db")]
@@ -36,9 +35,6 @@ class DataCollection:
         
         return my_array
 
-    # Public methods 
-    #
-    # Get a single instance of an item
     def get_player(self): return self.__get_random_from_collection("players")
     def get_salty_card(self): return self.__get_random_from_collection("salt")
     def get_top_lands(self): return self.__get_random_from_collection("lands")
@@ -51,9 +47,6 @@ class DataCollection:
     def get_instant_phase(self): return self.__get_random_from_collection("instantphases")
     def get_top_enchantment(self): return self.__get_random_from_collection("enchantments")
     
-    # Public methods
-    #
-    # Get an array of items based on size
     def get_player_array(self, size): return self.__create_array_of_random_items("players", size)
     def get_salty_card_array(self, size): return self.__create_array_of_random_items("salt", size)
     def get_top_lands_array(self, size): return self.__create_array_of_random_items("lands", size)

@@ -1,12 +1,12 @@
-import schedule
-import time
 import os
-from dotenv import load_dotenv
+import time
+import pycron
 from twython import Twython
+from datetime import datetime
+from dotenv import load_dotenv
 from sentences import get_sentence
 
 load_dotenv()
-my_tweet = get_sentence()
 
 twitter = Twython(
     os.getenv('consumer_key'),
@@ -15,16 +15,26 @@ twitter = Twython(
     os.getenv('access_token_secret')
 )
 
-def job():
-    twitter.update_status(status=my_tweet)
-    print(f"Tweeted:\n{my_tweet}")
+def log_message(message):
+    now = datetime.now()
+    dt_string = now.strftime("[%d-%m-%Y %H:%M:%S]")
+    print(f"{dt_string} : {message}")
 
-
-schedule.every().sunday.at("13:00").do(job)
-schedule.every().tuesday.at("13:00").do(job)
-schedule.every().thursday.at("13:00").do(job)
-schedule.every().friday.at("13:00").do(job)
+def send_tweet(tweet):
+    twitter.update_status(status=tweet)
 
 while True:
-    schedule.run_pending()
-    time.sleep(1)
+    if pycron.is_now('0 13 * * 0,2,4,5'):
+        my_tweet = get_sentence()
+        log_message("Begining tweet function...")
+        log_message(f"Sentence: {my_tweet}")
+        log_message("Attepting to tweet...")
+        try:
+            send_tweet(my_tweet)
+            log_message("Successfully Tweeted!")
+        except Exception as ex:
+            log_message("Unable to send tweet.")
+            log_message(f"{ex}")
+        time.sleep(60)
+    else:
+        time.sleep(15)
